@@ -54,7 +54,9 @@ app.post('/api/ask', async (req, res) => {
       const content = part.choices[0]?.delta?.content || '';
       assistantReply += content;
     }
-
+if (!assistantReply || assistantReply.trim().length < 5) {
+  assistantReply = "Sorry, I couldn't understand that. Could you say it again?";
+}
     const speech = await openai.audio.speech.create({
       model: 'tts-1',
       voice: 'shimmer',
