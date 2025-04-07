@@ -65,7 +65,15 @@ app.post('/api/ask', async (req, res) => {
     const outPath = path.join(__dirname, 'response.mp3');
     fs.writeFileSync(outPath, buffer);
 
-    res.sendFile(outPath);
+    res.setHeader('Content-Type', 'audio/mpeg');
+res.setHeader('Content-Disposition', 'inline; filename="response.mp3"');
+res.setHeader('Accept-Ranges', 'bytes');
+res.sendFile(outPath, (err) => {
+  if (err) {
+    console.error("❌ Failed to send audio file:", err);
+    res.status(500).send("Audio failed.");
+  }
+});
   } catch (err) {
     console.error(err);
     res.status(500).send('Error processing voice');
