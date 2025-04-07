@@ -46,8 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
           console.log("📥 Got response from server! Blob size:", mp3Blob.size);
   
           const audioURL = URL.createObjectURL(mp3Blob);
-          audio.src = audioURL;
-          audio.play();
+         audio.src = audioURL;
+
+audio.onloadeddata = () => {
+  audio.play().catch((err) => {
+    console.warn("🔇 Autoplay blocked on mobile. Ask user to tap.", err);
+    alert("Tap the ▶️ play button to hear the assistant.");
+  });
+};
+
+audio.onerror = (err) => {
+  console.error("❌ Audio load/play error:", err);
+  alert("There was a problem playing the assistant's voice. Please try again.");
+};
   
           wave.classList.add("inactive");
   
